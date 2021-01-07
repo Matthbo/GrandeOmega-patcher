@@ -1,11 +1,9 @@
 # Grande Omega Packager
 
-A packager wrapper for Grande Omega.
+A dependency patcher for Grande Omega.
 
-The objective of this tool is to create a good installer for Windows, MacOS & Linux like most normal electron apps have.
+The objective of this tool is to patch Grande Omega's dependencies, removing unnecessary dependencies, updating dependencies and most importantly: Fix electron for Linux users.
 
 Planned abilities:
-- Download & unzip Grande Omega
-- Package & optimize Grande Omega & required dependencies
-- Create installers for Windows, MacOS & Linux (Debian/Ubuntu)
-- Auto updater system using Electron's methods
+- runnable by a cli
+- run patcher on a existing GO location

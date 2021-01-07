@@ -1,7 +1,7 @@
 {
   "name": "grandeomega-patcher",
   "version": "0.0.1",
-  "description": "A packager wrapper for Grande Omega",
+  "description": "A dependency patcher for Grande Omega",
   "main": "bin/index",
   "private": true,
   "scripts": {
