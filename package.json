@@ -1,0 +1,18 @@
+{
+  "name": "grandeomega-patcher",
+  "version": "0.0.1",
+  "description": "A packager wrapper for Grande Omega",
+  "main": "bin/index",
+  "private": true,
+  "scripts": {
+    "start": "node bin/index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthbo",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.4.16",
+    "chalk": "^4.1.0",
+    "node-fetch": "^2.6.1"
+  }
+}

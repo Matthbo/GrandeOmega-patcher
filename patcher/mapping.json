@@ -1,0 +1,4 @@
+{
+    "package.patch": "package.json",
+    "main.patch": "main.js"
+}

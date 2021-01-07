@@ -1,0 +1,71 @@
+{
+  "name": "ts-bccc-meta-interpreter-playground",
+  "description": "Grande Omega, patched & build by Matthbo",
+  "author": {
+    "name": "Dr. Giuseppe Maggiore",
+    "email": "giuseppemag@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "version": "1.0.0-patched",
+  "scripts": {
+    "debug": "electron .",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "main": "main.js",
+  "dependencies": {
+    "adm-zip": "^0.4.13",
+    "arch": "2.1.0",
+    "devtools-protocol": "0.0.547074",
+    "diff-match-patch": "1.0.0",
+    "dotenv": "^5.0.1",
+    "electron-debug": "^2.0.0",
+    "electron-main-window": "^1.0.4",
+    "fs-extra": "5.0.0",
+    "fuzzy": "0.1.3",
+    "getos": "^3.1.0",
+    "glob": "^7.1.2",
+    "html2canvas": "^1.0.0-alpha.9",
+    "iconv-lite": "0.4.21",
+    "immutable": "^3.8.2",
+    "inversify": "4.11.1",
+    "line-by-line": "0.1.6",
+    "markdown-it": "^8.4.0",
+    "md5": "2.2.1",
+    "minimatch": "3.0.4",
+    "named-js-regexp": "1.3.3",
+    "node-powershell": "^3.3.1",
+    "node-stream-zip": "1.6.0",
+    "noice-json-rpc": "^1.2.0",
+    "opn": "5.3.0",
+    "pidusage": "1.2.0",
+    "ps-tree": "^1.2.0",
+    "reflect-metadata": "0.1.12",
+    "semver": "5.5.0",
+    "shelljs": "^0.8.3",
+    "sudo-prompt": "8.2.0",
+    "tmp": "0.0.29",
+    "tree-kill": "^1.2.2",
+    "ts-bccc": "^1.0.10",
+    "ts-bccc-meta-compiler": "^1.0.99",
+    "typescript-char": "0.0.0",
+    "uint64be": "1.0.1",
+    "unicode": "10.0.0",
+    "untildify": "3.0.2",
+    "vscode": "^1.1.5",
+    "vscode-debugadapter": "^1.35.0",
+    "vscode-debugadapter-testsupport": "^1.35.0",
+    "vscode-debugprotocol": "^1.35.0",
+    "vscode-extension-telemetry": "0.0.15",
+    "vscode-languageclient": "3.5.1",
+    "vscode-languageserver": "3.5.1",
+    "vscode-nls": "^3.2.2",
+    "ws": "^3.3.2",
+    "xml2js": "0.4.19"
+  },
+  "devDependencies": {
+    "electron": "4.2.12"
+  }
+}
