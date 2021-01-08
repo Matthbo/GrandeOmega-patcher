@@ -1,4 +1,5 @@
 {
     "package.patch": "package.json",
-    "main.patch": "main.js"
+    "main.patch": "main.js",
+    "my-app.patch": "bin/my-app.js"
 }
