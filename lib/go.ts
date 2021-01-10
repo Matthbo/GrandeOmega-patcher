@@ -1,8 +1,4 @@
-import chalk from "chalk";
-import fetch from "node-fetch";
-import { promises as fsPromises } from "fs";
-import path from "path";
-import util from "util";
+import { colours, path } from "./deps.ts";
 
 export class GO {
     baseLocation: string;
@@ -14,43 +10,47 @@ export class GO {
     }
 
     async checkVersion(url: string){
-        console.log(chalk.blueBright("Checking for newer Grande Omega version"));
+        console.log(colours.brightBlue("Checking for newer Grande Omega version"));
 
         const res = await fetch(url),
             onlineVersion = await res.text(),
-            offlineVersion = await fsPromises.readFile(this.baseLocation + "/version.txt", { encoding: 'utf8' }).catch(error => {
-                if (error.code !== "ENOENT")
+            offlineVersion = await Deno.readTextFile(this.baseLocation + "/version.txt").catch(error => {
+                console.log(Object.keys(error), error.name)
+                if (error.name !== "NotFound")
                     throw error;
                 else
-                    return "0";
+                    "0";
             });
 
         return offlineVersion !== onlineVersion;
     }
 
     async installDependencies(){
-        console.log(chalk.blueBright("Installing dependencies via npm"));
+        console.log(colours.brightBlue("Installing dependencies via npm"));
 
-        const exec = util.promisify(require('child_process').exec);
+        const subProcess = Deno.run({
+            cmd: ["npm", "i -s"],
+            cwd: this.baseLocation
+        });
         
-        await exec("npm i -s", { cwd: this.baseLocation }).then(() => 
-            console.log(chalk.greenBright("  Done"))
+        await subProcess.status().then(() =>
+            console.log(colours.brightGreen("  Done"))
         ).catch((error: Error) => 
-            console.error(chalk.redBright(`Failed to install dependencies:\n${error.stack}`))
+            console.error(colours.brightRed(`Failed to install dependencies:\n${error.stack}`))
         );
     }
 
     async patch(){
-        console.log(chalk.blueBright("Patching files"));
+        console.log(colours.brightBlue("Patching files"));
 
-        const mappings = JSON.parse(await fsPromises.readFile(this.patcherLocation + '/mapping.json', "utf8")),
+        const mappings = JSON.parse(await Deno.readTextFile(this.patcherLocation + '/mapping.json')),
             patchesLocation = path.normalize(this.patcherLocation + "/patches/");
 
         for (const patchFileLocation in mappings){
             const sourceFileLocation = mappings[patchFileLocation],
-                patchFile = await fsPromises.readFile(patchesLocation + patchFileLocation);
+                patchFile = await Deno.readFile(patchesLocation + patchFileLocation);
 
-            await fsPromises.writeFile(this.baseLocation + `/${sourceFileLocation}`, patchFile);
+            await Deno.writeFile(this.baseLocation + `/${sourceFileLocation}`, patchFile);
         }
     }
 }

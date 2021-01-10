@@ -1,9 +1,5 @@
-import fetch from "node-fetch";
-import admZip from "adm-zip";
-import chalk from "chalk";
-import fs from "fs";
-import path from "path";
-import { TestIfDirExistAndCreateDir } from "./utils";
+import { colours, path, fs } from "./deps.ts";
+// import admZip from "adm-zip";
 
 export class Downloader {
     outDir: string;
@@ -17,32 +13,36 @@ export class Downloader {
     }
 
     async downloadFile(url: string) {
-        console.log(chalk.blueBright("Downloading Grande Omega"));
+        console.log(colours.brightBlue("Downloading Grande Omega"));
         
-        await TestIfDirExistAndCreateDir(this.outDir);
+        await fs.ensureDir(this.outDir);
 
-        const res = await fetch(url),
-            file = fs.createWriteStream(this.outDir + "/go.zip"),
-            stream = res.body.pipe(file);
+        const res = await fetch(url)/* ,
+            file = await Deno.create(this.outDir + "/go.zip");
 
-        await new Promise(resolve => stream.on("finish", resolve));
-        console.log(chalk.greenBright("  Done"));
+        res.body?.pipeTo(file); */ // Doesn't work because file has no writable stream??????
+        const file = await res.blob(),
+            buffer = await file.arrayBuffer();
+
+        await Deno.writeFile(this.outDir + "/go.zip", new Uint8Array(buffer));
+
+        console.log(colours.brightGreen("  Done"));
     }
 
     unzipFile(){
-        const file = new admZip(this.filePath),
+        /* const file = new admZip(this.filePath),
             fileContents = (file.getEntries().filter(
-                content => !(content.entryName.startsWith("go_student_mac/node_modules")
+                (content: any) => !(content.entryName.startsWith("go_student_mac/node_modules")
                     || content.entryName.endsWith("/")
                     || content.entryName.endsWith(".map"))
-            ));
+            )); 
 
-        fileContents.forEach(content => {
+        fileContents.forEach((content: any) => {
             let extractDir = path.dirname(`${this.goDir}/${content.entryName.replace("go_student_mac/", "")}`);
 
             file.extractEntryTo(content.entryName, extractDir, false, false);
         });
 
-        console.log(chalk.greenBright("  Done"));
+        console.log(colours.brightGreen("  Done")); */
     }
 }

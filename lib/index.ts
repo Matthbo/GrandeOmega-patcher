@@ -1,10 +1,12 @@
-import chalk from "chalk";
-import { promises as fsPromises } from "fs";
-import { Downloader } from "./downloader";
-import { GO } from "./go";
+import { colours, path } from "./deps.ts";
+import { Downloader } from "./downloader.ts";
+import { GO } from "./go.ts";
+
+const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 async function main() {
     try {
+        console.log(__dirname)
         const dl = new Downloader(__dirname + "/../tmp", __dirname + "/../GO"),
             go = new GO(__dirname + "/../GO", __dirname + "/../patcher");
 
@@ -13,30 +15,30 @@ async function main() {
         if(needsDownload){    
             await dl.downloadFile("http://www.grandeomega.com/downloads/go_student_mac.zip");
 
-            console.log(chalk.blueBright("Unzipping Grande Omega"));
-            await fsPromises.rmdir(__dirname + "/../GO", { recursive: true }).catch(
-                error => { if (error.code !== "ENOENT") throw error }
-            ).then(() => dl.unzipFile());
+            console.log(colours.brightBlue("Unzipping Grande Omega"));
+            await Deno.remove(__dirname + "/../GO", { recursive: true }).catch(
+                error => { if (error.name !== "NotFound") throw error }
+            )/* .then(() => dl.unzipFile()); */
 
-            await go.patch();
-            await go.installDependencies();
+            // await go.patch();
+            // await go.installDependencies();
         }
 
-        console.log(chalk.blueBright("Cleaning up"));
+        console.log(colours.brightBlue("Cleaning up"));
         await cleanUp();
 
-        console.log(chalk.blueBright("Finished"));
+        console.log(colours.brightBlue("Finished"));
     } catch(error){
-        console.error(chalk.redBright(`Failed to package Grande Omega!\n${error.stack}`));
+        console.error(colours.brightRed(`Failed to patch Grande Omega!\n${error.stack}`));
         await cleanUp();
     }
 }
 
 async function cleanUp(){
     try{
-        await fsPromises.unlink(__dirname + "/../tmp/go.zip").catch(error => { if(error.code !== "ENOENT") throw error });
+        await Deno.remove(__dirname + "/../tmp/go.zip").catch(error => { if(error.name !== "NotFound") throw error });
     } catch(error){
-        console.error(chalk.redBright(`Failed to clean up!\n${error.stack}`));
+        console.error(colours.brightRed(`Failed to clean up!\n${error.stack}`));
     }
 }
 
