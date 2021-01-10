@@ -27,7 +27,7 @@ async function main() {
 
         console.log(chalk.blueBright("Finished"));
     } catch(error){
-        console.error(chalk.redBright(`Failed to package Grande Omega!\n${error.stack}`));
+        console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
         await cleanUp();
     }
 }
