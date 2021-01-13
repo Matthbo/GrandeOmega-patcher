@@ -17,10 +17,10 @@ async function main() {
             await fsPromises.rmdir(__dirname + "/../GO", { recursive: true }).catch(
                 error => { if (error.code !== "ENOENT") throw error }
             ).then(() => dl.unzipFile());
-
-            await go.patch();
-            await go.installDependencies();
         }
+
+        await go.patch();
+        await go.installDependencies();
 
         console.log(chalk.blueBright("Cleaning up"));
         await cleanUp();

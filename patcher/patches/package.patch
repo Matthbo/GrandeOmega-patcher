@@ -9,6 +9,7 @@
   "version": "1.0.0-patched",
   "scripts": {
     "debug": "electron .",
+    "start": "node bin/my-app",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "engines": {
