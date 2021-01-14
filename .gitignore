@@ -2,6 +2,10 @@ GO/
 tmp/
 dist/
 
+# Built files
+*.js
+*.d.ts
+
 # IDE config files
 .vscode/
 .idea/

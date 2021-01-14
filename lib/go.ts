@@ -8,9 +8,9 @@ export class GO {
     baseLocation: string;
     patcherLocation: string;
 
-    constructor(baseLocation: string, patcherLocation: string){
-        this.baseLocation = path.normalize(baseLocation)
-        this.patcherLocation = path.normalize(patcherLocation)
+    constructor(baseLocation: string, patchesLocation: string){
+        this.baseLocation = path.normalize(baseLocation);
+        this.patcherLocation = path.normalize(patchesLocation);
     }
 
     async checkVersion(url: string){
@@ -40,8 +40,12 @@ export class GO {
         );
     }
 
-    async patch(){
+    async patch(online: boolean){
         console.log(chalk.blueBright("Patching files"));
+
+        if(online){
+            // TODO download patches from github
+        }
 
         const mappings = JSON.parse(await fsPromises.readFile(this.patcherLocation + '/mapping.json', "utf8")),
             patchesLocation = path.normalize(this.patcherLocation + "/patches/");

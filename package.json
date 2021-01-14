@@ -2,7 +2,8 @@
   "name": "grandeomega-patcher",
   "version": "0.0.2",
   "description": "A dependency patcher for Grande Omega",
-  "main": "lib/index.js",
+  "main": "index.js",
+  "types": "index.d.ts",
   "private": true,
   "scripts": {
     "build": "tsc",

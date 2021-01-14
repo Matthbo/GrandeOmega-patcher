@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { promises as fsPromises } from "fs";
+import path from "path";
 import { Downloader } from "./downloader";
 import { GO } from "./go";
 
@@ -19,22 +20,45 @@ async function main() {
             ).then(() => dl.unzipFile());
         }
 
-        await go.patch();
+        await go.patch(false);
         await go.installDependencies();
 
         console.log(chalk.blueBright("Cleaning up"));
-        await cleanUp();
+        await cleanUp(__dirname + "/../tmp");
 
         console.log(chalk.blueBright("Finished"));
     } catch(error){
         console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
-        await cleanUp();
+        await cleanUp(__dirname + "/../tmp");
     }
 }
 
-async function cleanUp(){
+export async function remoteMain(goDir: string){
+    try {
+        const go = new GO(goDir, goDir + "/tmp"),
+            needsDownload = await go.checkVersion("http://grandeomega.com/api/v1/CustomAssignmentLogic/version");
+
+        if(needsDownload)
+            console.log(chalk.yellowBright("Your Grande Omega version is outdated!\nYou'd probably want to update it...\n"));
+        
+        await go.patch(true);
+        await go.installDependencies();
+
+        console.log(chalk.blueBright("Cleaning up"));
+        await cleanUp(goDir + "/tmp");
+
+        console.log(chalk.blueBright("Finished"));
+    } catch(error) {
+        console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
+        await cleanUp(goDir + "/tmp");
+    }
+}
+
+async function cleanUp(outDir: string){
+    outDir = path.normalize(outDir);
+    
     try{
-        await fsPromises.unlink(__dirname + "/../tmp/go.zip").catch(error => { if(error.code !== "ENOENT") throw error });
+        await fsPromises.unlink(outDir + "/go.zip").catch(error => { if(error.code !== "ENOENT") throw error });
     } catch(error){
         console.error(chalk.redBright(`Failed to clean up!\n${error.stack}`));
     }
