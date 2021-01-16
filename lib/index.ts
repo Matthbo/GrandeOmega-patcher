@@ -1,10 +1,12 @@
 import chalk from "chalk";
 import { promises as fsPromises } from "fs";
 import path from "path";
+import { promisify } from "util";
+import rimraf from "rimraf";
 import { Downloader } from "./downloader";
 import { GO } from "./go";
 
-async function main() {
+export async function main() {
     try {
         const dl = new Downloader(__dirname + "/../tmp", __dirname + "/../GO"),
             go = new GO(__dirname + "/../GO", __dirname + "/../patcher");
@@ -44,13 +46,9 @@ export async function remoteMain(goDir: string){
         await go.patch(true);
         await go.installDependencies();
 
-        console.log(chalk.blueBright("Cleaning up"));
-        await cleanUp(goDir + "/tmp");
-
         console.log(chalk.blueBright("Finished"));
     } catch(error) {
         console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
-        await cleanUp(goDir + "/tmp");
     }
 }
 
@@ -58,10 +56,8 @@ async function cleanUp(outDir: string){
     outDir = path.normalize(outDir);
     
     try{
-        await fsPromises.unlink(outDir + "/go.zip").catch(error => { if(error.code !== "ENOENT") throw error });
+        await promisify(rimraf)(outDir).catch(error => { if(error.code !== "ENOENT") throw error });
     } catch(error){
         console.error(chalk.redBright(`Failed to clean up!\n${error.stack}`));
     }
 }
-
-main();

@@ -43,18 +43,24 @@ export class GO {
     async patch(online: boolean){
         console.log(chalk.blueBright("Patching files"));
 
+        let mappings: { [index: string]: string };
+
         if(online){
-            // TODO download patches from github
-        }
+            const basePatcherUrl = "https://raw.githubusercontent.com/Matthbo/GrandeOmega-patcher/master/patcher";
+            mappings = await (await fetch(basePatcherUrl + "/mapping.json")).json();
 
-        const mappings = JSON.parse(await fsPromises.readFile(this.patcherLocation + '/mapping.json', "utf8")),
-            patchesLocation = path.normalize(this.patcherLocation + "/patches/");
+            for(const [fileName, sourceFileLocation] of Object.entries(mappings)){
+                const patchFile = await (await fetch(`${basePatcherUrl}/patches/${fileName}`)).buffer();
+                await fsPromises.writeFile(this.baseLocation + `/${sourceFileLocation}`, patchFile);
+            }
+        } else {
+            const patchesLocation = path.normalize(this.patcherLocation + "/patches/");
+            mappings = JSON.parse(await fsPromises.readFile(this.patcherLocation + '/mapping.json', "utf8"));
 
-        for (const patchFileLocation in mappings){
-            const sourceFileLocation = mappings[patchFileLocation],
-                patchFile = await fsPromises.readFile(patchesLocation + patchFileLocation);
-
-            await fsPromises.writeFile(this.baseLocation + `/${sourceFileLocation}`, patchFile);
+            for(const [fileName, sourceFileLocation] of Object.entries(mappings)){
+                const patchFile = await fsPromises.readFile(patchesLocation + fileName);
+                await fsPromises.writeFile(this.baseLocation + `/${sourceFileLocation}`, patchFile);
+            }
         }
     }
 }
