@@ -13,7 +13,6 @@
     "lib",
     "index.*"
   ],
-  "private": true,
   "scripts": {
     "build": "tsc",
     "clean": "tsc -b --clean",
