@@ -3,6 +3,8 @@ import admZip from "adm-zip";
 import chalk from "chalk";
 import fs from "fs";
 import path from "path";
+import { promisify } from "util";
+import rimraf from "rimraf";
 import { TestIfDirExistAndCreateDir } from "./utils";
 
 export class Downloader {
@@ -44,5 +46,16 @@ export class Downloader {
         });
 
         console.log(chalk.greenBright("  Done"));
+    }
+
+    static async cleanUp(outDir: string, handleError?: (error: Error) => void){
+        outDir = path.normalize(outDir);
+        
+        try{
+            await promisify(rimraf)(outDir).catch(error => { if(error.code !== "ENOENT") throw error });
+        } catch(error){
+            if(handleError !== undefined) handleError(error);
+            else console.error(chalk.redBright(`Failed to clean up!\n${error.stack}`));
+        }
     }
 }
