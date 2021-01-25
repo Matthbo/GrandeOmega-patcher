@@ -20,6 +20,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matthbo",
+  "bugs": {
+    "url": "https://github.com/Matthbo/GrandeOmega-patcher/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Matthbo/GrandeOmega-patcher.git"
+  },
   "license": "MIT",
   "dependencies": {
     "adm-zip": "^0.4.16",
