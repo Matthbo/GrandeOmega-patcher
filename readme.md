@@ -1,4 +1,4 @@
-# Grande Omega Packager
+# Grande Omega Patcher
 
 A dependency patcher for Grande Omega.
 
