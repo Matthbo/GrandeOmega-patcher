@@ -5,10 +5,6 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
-require('electron-debug')({
-  enabled: false
-});
-
 // const language_main = require('../dist/test')
 
 // Keep a global reference of the window object, if you don't, the window will
