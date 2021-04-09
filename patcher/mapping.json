@@ -2,5 +2,6 @@
     "main.patch": "main.js",
     "my-app.patch": "bin/my-app.js",
     "package.patch": "package.json",
-    "start.patch": "start.command"
+    "start.patch": "start.command",
+    "style.patch": "wwwroot/css/style.css"
 }
