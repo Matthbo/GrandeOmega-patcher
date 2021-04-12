@@ -7,10 +7,12 @@ import util from "util";
 export class GO {
     baseLocation: string;
     patcherLocation: string;
+    cli: boolean;
 
-    constructor(baseLocation: string, patchesLocation: string){
+    constructor(baseLocation: string, patchesLocation: string, cli: boolean){
         this.baseLocation = path.normalize(baseLocation);
         this.patcherLocation = path.normalize(patchesLocation);
+        this.cli = cli;
     }
 
     async checkVersion(url: string){
@@ -40,12 +42,12 @@ export class GO {
         );
     }
 
-    async patch(online: boolean){
+    async patch(){
         console.log(chalk.blueBright("Patching files"));
 
         let mappings: { [index: string]: string };
 
-        if(online){
+        if (this.cli){
             const basePatcherUrl = "https://raw.githubusercontent.com/Matthbo/GrandeOmega-patcher/master/patcher";
             mappings = await (await fetch(basePatcherUrl + "/mapping.json")).json();
 
@@ -62,5 +64,9 @@ export class GO {
                 await fsPromises.writeFile(this.baseLocation + `/${sourceFileLocation}`, patchFile);
             }
         }
+    }
+
+    async hasSkinInstalled() {
+        // TODO (for cli)
     }
 }

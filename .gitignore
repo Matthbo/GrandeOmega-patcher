@@ -1,6 +1,7 @@
 GO/
 tmp/
 dist/
+start-mono.cmd
 
 # Built files
 *.js

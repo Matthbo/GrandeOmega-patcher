@@ -1,11 +1,13 @@
 import chalk from "chalk";
+import { promises as fsPromises } from "fs";
 import { Downloader } from "./downloader";
 import { GO } from "./go";
+import { askApplySkin, askWantedSkin } from "./utils";
 
 export async function main() {
     try {
         const dl = new Downloader(__dirname + "/../tmp", __dirname + "/../GO"),
-            go = new GO(__dirname + "/../GO", __dirname + "/../patcher");
+            go = new GO(__dirname + "/../GO", __dirname + "/../patcher", false);
 
         const needsDownload = await go.checkVersion("http://grandeomega.com/api/v1/CustomAssignmentLogic/version");
 
@@ -17,8 +19,21 @@ export async function main() {
             dl.unzipFile();
         }
 
-        await go.patch(false);
+        await go.patch();
         await go.installDependencies();
+
+        if (needsDownload && await askApplySkin()){
+            const skins: { [index: string]: string } = JSON.parse(await fsPromises.readFile(__dirname + "/../skins.json", { encoding: 'utf8' })),
+                skinNames = Object.keys(skins);
+
+            console.log(`Available skins:\n- ${skinNames.join("\n- ")}`);
+
+            const wantedSkin = await askWantedSkin(skinNames);
+            if(wantedSkin != "none") {
+                await dl.downloadSkin(`${skins[wantedSkin]}/archive/refs/heads/master.zip`);
+                dl.unzipSkin();
+            }
+        }
 
         console.log(chalk.blueBright("Cleaning up"));
         await Downloader.cleanUp(__dirname + "/../tmp");
@@ -32,13 +47,13 @@ export async function main() {
 
 export async function remoteMain(goDir: string){
     try {
-        const go = new GO(goDir, goDir + "/tmp"),
+        const go = new GO(goDir, goDir + "/tmp", true),
             needsDownload = await go.checkVersion("http://grandeomega.com/api/v1/CustomAssignmentLogic/version");
 
         if(needsDownload)
             console.log(chalk.yellowBright("Your Grande Omega version is outdated!\nYou'd probably want to update it...\n"));
         
-        await go.patch(true);
+        await go.patch();
         await go.installDependencies();
 
         console.log(chalk.blueBright("Finished"));
