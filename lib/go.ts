@@ -67,6 +67,11 @@ export class GO {
     }
 
     async hasSkinInstalled() {
-        // TODO (for cli)
+        try{
+            await fsPromises.access(this.baseLocation + "/.skin");
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }

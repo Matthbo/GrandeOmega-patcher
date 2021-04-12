@@ -63,7 +63,7 @@ export class Downloader {
         console.log(chalk.greenBright("  Done"));
     }
 
-    unzipSkin(){
+    unzipSkin(name: string){
         console.log(chalk.blueBright("Unzipping skin"));
 
         const file = new admZip(this.skinPath),
@@ -79,6 +79,8 @@ export class Downloader {
 
             file.extractEntryTo(content.entryName, extractPath, false, true);
         });
+
+        fs.promises.writeFile(this.goDir + "/.skin", name);
 
         console.log(chalk.greenBright("  Done"));
     }
