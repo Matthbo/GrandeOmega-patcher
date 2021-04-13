@@ -54,8 +54,14 @@ export async function remoteMain(goDir: string){
 
         if(needsDownload)
             console.log(chalk.yellowBright("Your Grande Omega version is outdated!\nYou'd probably want to update it...\n"));
-        
+
         await go.patch();
+
+        if (await go.hasDepsInstalled()){
+            console.log(chalk.blueBright("Removing (pre-)installed dependencies"));
+            await Downloader.cleanUp(goDir + "/node_modules");
+        }
+
         await go.installDependencies();
 
         if (!await go.hasSkinInstalled() && await askApplySkin()) {

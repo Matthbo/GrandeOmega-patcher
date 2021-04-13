@@ -74,4 +74,13 @@ export class GO {
             return false;
         }
     }
+
+    async hasDepsInstalled(){
+        try {
+            await fsPromises.access(this.baseLocation + "/node_modules");
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 }
