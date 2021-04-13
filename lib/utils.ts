@@ -47,10 +47,11 @@ export const askApplySkin = async () => await askQuestion<boolean>("Apply a skin
 });
 
 export const askWantedSkin = async (skinNames: string[]) => await askQuestion<string>("What skin would you like? (type 'none' to cancel)", res => {
-    const resLowerCase = res.toLowerCase();
+    const resLowerCase = res.toLowerCase(),
+        skinNamesIndex = skinNames.findIndex(name => name.toLowerCase() == resLowerCase);
 
-    if (skinNames.findIndex(name => name.toLowerCase() == resLowerCase) > -1 || resLowerCase == "none")
-        return { res };
+    if (skinNamesIndex > -1 || resLowerCase == "none")
+        return { res: skinNames[skinNamesIndex] };
 
     return false;
 })
