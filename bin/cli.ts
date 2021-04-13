@@ -3,4 +3,4 @@
 import { cwd } from "process";
 import { remoteMain } from "../lib/index";
 
-remoteMain(cwd());
+remoteMain(cwd(), true);

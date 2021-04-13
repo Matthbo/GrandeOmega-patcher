@@ -46,7 +46,7 @@ export async function main() {
     }
 }
 
-export async function remoteMain(goDir: string){
+export async function remoteMain(goDir: string, askUserInput = false){
     try {
         const dl = new Downloader(goDir + "/tmp", goDir),
             go = new GO(goDir, goDir + "/tmp", true),
@@ -64,7 +64,7 @@ export async function remoteMain(goDir: string){
 
         await go.installDependencies();
 
-        if (!await go.hasSkinInstalled() && await askApplySkin()) {
+        if (askUserInput && !await go.hasSkinInstalled() && await askApplySkin()) {
             const skins: { [index: string]: string } = await (await fetch("https://raw.githubusercontent.com/Matthbo/GrandeOmega-patcher/master/skins.json")).json(),
                 skinNames = Object.keys(skins);
 
