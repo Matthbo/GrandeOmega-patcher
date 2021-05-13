@@ -13,7 +13,7 @@ export async function TestIfDirExistAndCreateDir(location: string) {
     };
 };
 
-export async function askQuestion<T>(question: string, handleAnswer: (res: string) => { res: T } | false): Promise<T>{
+async function askQuestion<T>(question: string, handleAnswer: (res: string) => { res: T } | false): Promise<T>{
     const rl = createInterface({
         input: process.stdin,
         output: process.stdout
@@ -34,7 +34,7 @@ export async function askQuestion<T>(question: string, handleAnswer: (res: strin
     return correctResponse.res;
 }
 
-export const askApplySkin = async () => await askQuestion<boolean>("Apply a skin? [y/n]", res => {
+const askBoolQuestion = (question: string) => askQuestion<boolean>(`${question} [y/n]`, res => {
     res = res.toLowerCase();
 
     if (res.startsWith("y"))
@@ -46,6 +46,9 @@ export const askApplySkin = async () => await askQuestion<boolean>("Apply a skin
     return false;
 });
 
+export const askApplySkin = async () => await askBoolQuestion("Apply a skin?");
+export const askDownloadGO = async (path: string) => await askBoolQuestion(`Download & install Grande Omega in '${path}'?`);
+
 export const askWantedSkin = async (skinNames: string[]) => await askQuestion<string>("What skin would you like? (type 'none' to cancel)", res => {
     const resLowerCase = res.toLowerCase(),
         skinNamesIndex = skinNames.findIndex(name => name.toLowerCase() == resLowerCase);
@@ -54,4 +57,4 @@ export const askWantedSkin = async (skinNames: string[]) => await askQuestion<st
         return { res: skinNames[skinNamesIndex] };
 
     return false;
-})
+});

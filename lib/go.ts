@@ -23,8 +23,10 @@ export class GO {
             offlineVersion = await fsPromises.readFile(this.baseLocation + "/version.txt", { encoding: 'utf8' }).catch(error => {
                 if (error.code !== "ENOENT")
                     throw error;
-                else
+                else {
+                    console.log(chalk.yellowBright("Couldn't find installed version"));
                     return "0";
+                }
             });
 
         return offlineVersion !== onlineVersion;

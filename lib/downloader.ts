@@ -34,17 +34,20 @@ export class Downloader {
     }
 
     unzipFile(){
+        console.log(chalk.blueBright("Unzipping Grande Omega"));
+
         const file = new admZip(this.filePath),
             fileContents = (file.getEntries().filter(
                 content => !content.isDirectory && !(content.entryName.startsWith("go_student_mac/node_modules")
                     || content.entryName.endsWith("/")
                     || content.entryName.endsWith(".map"))
-            ));
+            )
+        );
 
         fileContents.forEach(content => {
             const extractPath = path.dirname(`${this.goDir}/${content.entryName.replace("go_student_mac/", "")}`);
 
-            file.extractEntryTo(content.entryName, extractPath, false, false);
+            file.extractEntryTo(content.entryName, extractPath, false, true);
         });
 
         console.log(chalk.greenBright("  Done"));

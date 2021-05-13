@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 import { promises as fsPromises } from "fs";
 import { Downloader } from "./downloader";
 import { GO } from "./go";
-import { askApplySkin, askWantedSkin } from "./utils";
+import { askApplySkin, askDownloadGO, askWantedSkin } from "./utils";
 
 export async function main() {
     try {
@@ -15,7 +15,6 @@ export async function main() {
         if(needsDownload){    
             await dl.downloadFile("http://www.grandeomega.com/downloads/go_student_mac.zip");
 
-            console.log(chalk.blueBright("Unzipping Grande Omega"));
             await Downloader.cleanUp(__dirname + "/../GO", error => { console.error(`Couldn't delete GO:\n${error.stack}`) });
             dl.unzipFile();
         }
@@ -52,8 +51,14 @@ export async function remoteMain(goDir: string, askUserInput = false){
             go = new GO(goDir, goDir + "/tmp", true),
             needsDownload = await go.checkVersion("http://grandeomega.com/api/v1/CustomAssignmentLogic/version");
 
-        if(needsDownload)
-            console.log(chalk.yellowBright("Your Grande Omega version is outdated!\nYou'd probably want to update it...\n"));
+        if(needsDownload){
+            console.log("\nYour Grande Omega version is outdated or not installed!\nYou'd probably want to update it...\n");
+            
+            if (askUserInput && await askDownloadGO(goDir)){
+                await dl.downloadFile("http://www.grandeomega.com/downloads/go_student_mac.zip");
+                dl.unzipFile();
+            }
+        }
 
         await go.patch();
 
@@ -75,10 +80,10 @@ export async function remoteMain(goDir: string, askUserInput = false){
                 await dl.downloadSkin(`${skins[wantedSkin]}/archive/refs/heads/master.zip`);
                 dl.unzipSkin(wantedSkin);
             }
-
-            console.log(chalk.blueBright("Cleaning up"));
-            await Downloader.cleanUp(goDir + "/tmp");
         }
+
+        console.log(chalk.blueBright("Cleaning up"));
+        await Downloader.cleanUp(goDir + "/tmp");
 
         console.log(chalk.blueBright("Finished"));
     } catch(error) {
