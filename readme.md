@@ -5,8 +5,8 @@ A dependency patcher for Grande Omega.
 The objective of this tool is to patch Grande Omega's dependencies, removing unnecessary dependencies, updating dependencies and most importantly: Fix electron for Linux users.  
 This tool can also apply skins from the [Grande-Omega-skins](https://github.com/Grande-Omega-Skins) organization.
 
-The CLI tool can patch the mac version of Grande Omega, it can also patch the auto-updater itself.  
-**NOTE:** It only works on Windows if you use either the mac version of Grande Omega.
+The CLI tool can patch the mac version of Grande Omega (works on Windows, MacOS & Linux).  
+**NOTE:** It only works on Windows if you use the mac version of Grande Omega.
 
 ## What it does
 1. Checks Grande Omega version (if available)
