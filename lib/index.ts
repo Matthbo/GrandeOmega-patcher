@@ -12,7 +12,7 @@ export async function main() {
 
         const needsDownload = await go.checkVersion("http://grandeomega.com/api/v1/CustomAssignmentLogic/version");
 
-        if(needsDownload){    
+        if(needsDownload){
             await dl.downloadFile("http://www.grandeomega.com/downloads/go_student_mac.zip");
 
             await Downloader.cleanUp(__dirname + "/../GO", error => { console.error(`Couldn't delete GO:\n${error.stack}`) });
@@ -57,6 +57,7 @@ export async function remoteMain(goDir: string, askUserInput = false){
             if (askUserInput && await askDownloadGO(goDir)){
                 await dl.downloadFile("http://www.grandeomega.com/downloads/go_student_mac.zip");
                 dl.unzipFile();
+                await Downloader.cleanUp(goDir + "/.skin");
             }
         }
 
