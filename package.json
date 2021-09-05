@@ -1,6 +1,6 @@
 {
   "name": "grandeomega-patcher",
-  "version": "1.3",
+  "version": "1.3.0",
   "description": "A dependency patcher for Grande Omega",
   "main": "index.js",
   "types": "index.d.ts",
