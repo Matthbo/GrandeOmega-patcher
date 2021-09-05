@@ -6,7 +6,7 @@ The objective of this tool is to patch Grande Omega's dependencies, removing unn
 This tool can also apply skins from the [Grande-Omega-skins](https://github.com/Grande-Omega-Skins) organization.
 
 The CLI tool can patch the mac version of Grande Omega (works on Windows, MacOS & Linux).  
-**NOTE:** It only works on Windows if you use the mac version of Grande Omega.
+**NOTE:** Can apply a skin on the Windows version, but can't patch the dependencies (_yet_).
 
 ## What it does
 1. Checks Grande Omega version (if available)
