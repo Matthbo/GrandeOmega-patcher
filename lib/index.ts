@@ -39,7 +39,7 @@ export async function main() {
         await Downloader.cleanUp(__dirname + "/../tmp");
 
         console.log(chalk.blueBright("Finished"));
-    } catch(error){
+    } catch(error: any){
         console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
         await Downloader.cleanUp(__dirname + "/../tmp");
     }
@@ -52,6 +52,23 @@ export async function remoteMain(goDir: string, askUserInput = false){
             needsDownload = await go.checkVersion("http://grandeomega.com/api/v1/CustomAssignmentLogic/version");
 
         if(needsDownload){
+            const isWin = await go.isWindowsVer();
+
+            if(isWin){
+                console.log("\nWindows version detected\n");
+
+                dl.setWinPaths();
+                go.setWinPaths();
+
+                await handleSkins(go, dl, askUserInput);
+                
+                console.log(chalk.blueBright("Cleaning up"));
+                await Downloader.cleanUp(goDir + "/tmp");
+
+                console.log(chalk.blueBright("Finished"));
+                return;
+            }
+
             console.log("\nYour Grande Omega version is outdated or not installed!\nYou'd probably want to update it...\n");
             
             if (askUserInput && await askDownloadGO(goDir)){
@@ -69,8 +86,22 @@ export async function remoteMain(goDir: string, askUserInput = false){
         }
 
         await go.installDependencies();
+        await handleSkins(go, dl, askUserInput);
 
-        if (askUserInput && !await go.hasSkinInstalled() && await askApplySkin()) {
+        console.log(chalk.blueBright("Cleaning up"));
+        await Downloader.cleanUp(goDir + "/tmp");
+
+        console.log(chalk.blueBright("Finished"));
+    } catch(error: any) {
+        console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
+    }
+}
+
+async function handleSkins(go: GO, dl: Downloader, askUserInput: boolean) {
+    const hasSkinInstalled = await go.hasSkinInstalled();
+
+    if (!hasSkinInstalled){
+        if (askUserInput && await askApplySkin()) {
             const skins: { [index: string]: string } = await (await fetch("https://raw.githubusercontent.com/Matthbo/GrandeOmega-patcher/master/skins.json")).json(),
                 skinNames = Object.keys(skins);
 
@@ -82,12 +113,7 @@ export async function remoteMain(goDir: string, askUserInput = false){
                 dl.unzipSkin(wantedSkin);
             }
         }
-
-        console.log(chalk.blueBright("Cleaning up"));
-        await Downloader.cleanUp(goDir + "/tmp");
-
-        console.log(chalk.blueBright("Finished"));
-    } catch(error) {
-        console.error(chalk.redBright(`Failed to patch Grande Omega!\n${error.stack}`));
+    } else {
+        console.log("A skin is already installed");
     }
 }

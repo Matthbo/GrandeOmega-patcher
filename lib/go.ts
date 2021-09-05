@@ -5,9 +5,9 @@ import path from "path";
 import util from "util";
 
 export class GO {
-    baseLocation: string;
-    patcherLocation: string;
-    cli: boolean;
+    private baseLocation: string;
+    private patcherLocation: string;
+    private cli: boolean;
 
     constructor(baseLocation: string, patchesLocation: string, cli: boolean){
         this.baseLocation = path.normalize(baseLocation);
@@ -15,7 +15,12 @@ export class GO {
         this.cli = cli;
     }
 
+    setWinPaths(){
+        this.baseLocation = path.join(this.baseLocation, "/resources/app/desktop/Student");
+    }
+
     async checkVersion(url: string){
+        // TODO give enum back with which version (Mac, Win, None)
         console.log(chalk.blueBright("Checking for newer Grande Omega version"));
 
         const res = await fetch(url),
@@ -30,6 +35,12 @@ export class GO {
             });
 
         return offlineVersion !== onlineVersion;
+    }
+
+    isWindowsVer(){
+        return fsPromises.access(this.baseLocation + "/GrandeOmega.exe")
+            .then(() => true)
+            .catch(_ => false);
     }
 
     async installDependencies(){

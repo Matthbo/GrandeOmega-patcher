@@ -8,16 +8,20 @@ import rimraf from "rimraf";
 import { TestIfDirExistAndCreateDir } from "./utils";
 
 export class Downloader {
-    outDir: string;
-    goDir: string;
-    filePath: string;
-    skinPath: string;
+    private outDir: string;
+    private goDir: string;
+    private filePath: string;
+    private skinPath: string;
 
     constructor(outDir: string, goDir: string) {
         this.outDir = outDir;
         this.goDir = path.normalize(goDir);
         this.filePath = path.normalize(outDir + "/go.zip");
         this.skinPath = path.normalize(outDir + "/skin.zip");
+    }
+
+    setWinPaths() {
+        this.goDir = path.join(this.goDir, "/resources/app/desktop/Student");
     }
 
     async downloadFile(url: string) {
@@ -94,7 +98,7 @@ export class Downloader {
         
         try{
             await promisify(rimraf)(outDir).catch(error => { if(error.code !== "ENOENT") throw error });
-        } catch(error){
+        } catch(error: any){
             if(handleError !== undefined) handleError(error);
             else console.error(chalk.redBright(`Failed to clean up!\n${error.stack}`));
         }
